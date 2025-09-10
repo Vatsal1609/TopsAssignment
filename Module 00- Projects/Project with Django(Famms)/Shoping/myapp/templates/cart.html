@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Cart{% endblock %}
+{% block content %}
+
+<!-- Cart Table -->
+<section class="container py-5">
+  <div class="table-responsive">
+    <table class="table table-bordered text-center">
+      <thead class="thead-dark">
+        <tr>
+          <th>Product</th>
+          <th>Name</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th>Remove</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        {%for cart in carts%}
+
+        <!-- Sample item row -->
+        <tr>
+          <td><img src="{{ cart.product.image.url }}" alt="{{ cart.product.name }}" width="70"></td>
+          <td>{{cart.product.name}}</td>
+          <td>{{cart.product.price}}</td>
+          <td><input type="number" value="{{cart.qty}}" class="form-control w-50 mx-auto" onchange="changeQty(value,'{{cart.id}}')"></td>
+          <td>${{cart.subTotal}}</td>
+          <td><button class="btn btn-danger btn-sm" onclick="deletecart('{{cart.id}}')">Remove</button></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Total and Buttons -->
+  <div class="text-right">  
+    <h4>Total:   ${{sum}}</h4>
+    <a href="{% url 'product' %}" class="btn btn-outline-dark">Continue Shopping</a>
+    <a href="{%url 'checkout'%}" class="btn btn-danger">Checkout</a>
+  </div>
+</section>
+
+<script>
+
+  const deletecart = (cid) => {
+    $.get("deletecart", { cid }, function (rt) {
+      location.reload()
+    })
+  }
+
+  const changeQty = (qty, cid) => {
+    $.get("changeqty", { qty, cid }, function (rt) {
+      location.reload()
+    })
+  }
+
+</script>
+
+
+{% endblock %}

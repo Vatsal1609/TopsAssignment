@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Checkout{% endblock %}
+{% block content %}
+
+<section class="container py-5">
+  <div class="row">
+    <div class="col-md-7 mb-4">
+      <div class="border p-4 rounded">
+      
+        <textarea name="address" id="adr" class="form__input"></textarea>
+        <button class="btn btn-danger" style="margin-left: 5px;" onclick="addaddress()">Add Address</button>
+          <h4 class="mb-4">Shipping Address</h4>
+        <div id="viewAddress"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Order Summary -->
+  <div class="col-md-5 mb-4">
+    <div class="border p-4 rounded">
+      <h4 class="mb-4">Order Summary</h4>
+      <ul class="list-group mb-3">
+        {% for cart in carts %}
+        <li class="list-group-item d-flex justify-content-between">
+          <img src="{{ cart.product.image.url }}" alt="" class="" width="45" />
+          <span>{{ cart.product.name }} (x{{ cart.qty }})</span>
+          <strong>₹{{ cart.product.price}}</strong>
+        </li>
+        {% endfor %}
+        <li class="list-group-item d-flex justify-content-between">
+          <strong>Total</strong>
+          <strong>₹{{ sum }}</strong>
+        </li>
+      </ul>
+      <button type="submit" class="btn btn-danger btn-block">Place Order</button>
+    </div>
+    </form>
+  </div>
+  </div>
+</section>
+
+
+<script>
+
+  $(document).ready(function () {
+    load()
+  })
+
+  const addaddress = () => {
+    var address = $("#adr").val()
+    $.get('address', { address }, function (rt) {
+      location.reload()
+    })
+  }
+
+  const load = () => {
+   
+    $.get('get-address', {}, function (rt) {
+    
+      var address = ""
+      rt.address.map(ele => {
+        alert(ele)
+        address += ` <div class="tab__body">
+            <input type='radio' name='adr' value='${ele.id}'>
+            <address class="address">
+             ${ele.address}
+            </address>
+            
+            <a href="#" class="edit">Edit</a>
+          </div>`
+      })
+
+      $("#viewAddress").html(address)
+
+    })
+
+  }
+
+</script>
+{% endblock %}

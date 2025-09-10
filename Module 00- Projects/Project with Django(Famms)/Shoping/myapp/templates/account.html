@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}My Account{% endblock %}
+{% block content %}
+
+<section class="container py-5">
+  <h2 class="mb-4" style="align-items: center;">My Account</h2>
+
+  <!-- Profile Section -->
+  <div class="card mb-4">
+    <div class="card-header bg-dark text-white">Profile Information</div>
+    <div class="card-body">
+      <p><strong>Username:</strong> {{ user.username }}</p>
+      <p><strong>Email:</strong> {{ user.email }}</p>
+      <a href="{% url 'userLogout' %}" class="btn btn-danger">Logout</a>
+    </div>
+  </div>
+
+  <!-- Address Section -->
+  <div class="card mb-4">
+    <div class="card-header bg-dark text-white">Address Information</div>
+    <div class="card-body">
+      <textarea name="address" id="adr" class="form__input"></textarea>
+      <button class="btn btn-danger" style="margin-left: 5px;" onclick="addaddress()">Add Address</button>
+      <div id="viewAddress"></div>
+
+    </div>
+  </div>
+
+</section>
+
+<script>
+
+  $(document).ready(function () {
+    load()
+  })
+
+  const addaddress = () => {
+    var address = $("#adr").val()
+    $.get('address', { address }, function (rt) {
+      location.reload()
+    })
+  }
+
+  const load = () => {
+
+    $.get('get-address', {}, function (rt) {
+
+      var address = ""
+      rt.address.map(ele => {
+        address += ` <div class="tab__body">
+            
+            <address class="address">
+             ${ele.address}
+            </address>
+            
+            <a href="#" class="edit">Edit</a>
+          </div>`
+      })
+
+      $("#viewAddress").html(address)
+
+    })
+
+  }
+
+</script>
+{% endblock %}
